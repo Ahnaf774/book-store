@@ -28,10 +28,10 @@ public class DynamoDbConfig {
     @Bean
     public DynamoDbAsyncClient dynamoDbAsyncClient() {
         String jdbcUrl = "jdbc:dynamodb://localhost:4566?region=ap-southeast-1";
-        URI uri = URI.create(jdbcUrl.replace("jdbc:dynamodb:", "http:")); // Convert to valid URI
+        URI uri = URI.create(jdbcUrl.replace("jdbc:dynamodb:", "http:"));
 
-        String endpoint = uri.getHost() + ":" + uri.getPort(); // Extract host and port
-        String region = uri.getQuery().split("=")[1]; // Extract region
+        String endpoint = uri.getHost() + ":" + uri.getPort();
+        String region = uri.getQuery().split("=")[1];
 
         return DynamoDbAsyncClient.builder()
                 .region(Region.of(region))

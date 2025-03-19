@@ -22,37 +22,42 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Book> addBook(@RequestBody BookDTO bookDTO) {
-        Book book = new Book();
-        book.setId(bookDTO.getId());
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setGenre(bookDTO.getGenre());
-        book.setPrice(bookDTO.getPrice());
-        return bookService.addBook(book);  // Call the addBook method from service
-    }
+      return Mono.just(bookDTO)
+              .map(dto -> Book.builder()
+                      .id(dto.getId())
+                      .title(dto.getTitle())
+                      .author(dto.getAuthor())
+                      .genre(dto.getGenre())
+                      .price(dto.getPrice())
+                      .build())
+                        .flatMap(bookService::addBook);
+              };
 
-    // Get a book by ID
+
+
     @GetMapping("/{id}")
     public Mono<Book> getBook(@PathVariable String id) {
+
         return bookService.getBookById(id);
     }
 
-    // Update a book by ID
-    @PutMapping("/{id}")
-    public Mono<Book> updateBook(@PathVariable String id, @RequestBody BookDTO bookDTO) {
-        // Map the DTO to the Book entity
-        Book book = new Book();
-        book.setId(id);
-        book.setTitle(bookDTO.getTitle());
-        book.setAuthor(bookDTO.getAuthor());
-        book.setGenre(bookDTO.getGenre());
-        book.setPrice(bookDTO.getPrice());
-        return bookService.updateBook(book);
-    }
 
-    // Delete a book by ID
+    @PutMapping("/{id}")
+        public Mono<Book> updateBook(@PathVariable String id, @RequestBody BookDTO bookDTO) {
+            return Mono.just(bookDTO)
+                    .map(dto -> Book.builder()
+                            .id(id)
+                            .title(dto.getTitle())
+                            .author(dto.getAuthor())
+                            .genre(dto.getGenre())
+                            .price(dto.getPrice())
+                            .build())
+                    .flatMap(bookService::updateBook);
+        }
+
+
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteBook(@PathVariable String id) {
         return bookService.removeBook(id);
     }

@@ -9,8 +9,11 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class BookService {
-    @Autowired
+
     private final BookRepository bookRepository;
+
+
+
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;

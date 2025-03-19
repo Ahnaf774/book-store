@@ -18,7 +18,7 @@ public class BookRepository {
     }
 
     public Mono<Book> save(Book book) {
-        return   Mono.fromFuture(() -> table.putItem(book))
+        return Mono.fromFuture(() -> table.putItem(book))
                 .thenReturn(book);
     }
 
@@ -26,21 +26,20 @@ public class BookRepository {
         return Mono.fromFuture(table.getItem(r -> r.key(k -> k.partitionValue(id))));
     }
 
-    public Flux<Book> findAll() {
-        return Flux.from(table.scan().items());
-    }
+
 
     public Mono<Void> deleteById(String id) {
         return Mono.fromFuture(table.deleteItem(r -> r.key(k -> k.partitionValue(id)))).then();
 
     }
-     public Mono<Book> update(Book book) {
-            return Mono.fromFuture(() -> table.putItem(book)) // Performs the update (or insert if not present)
-                       .thenReturn(book); // Return the updated book
-        }
+
+    public Mono<Book> update(Book book) {
+        return Mono.fromFuture(() -> table.putItem(book))
+                .thenReturn(book);
+    }
 
     public Flux<Book> getAllBooks() {
-        return Flux.from(table.scan().items()); // Convert items to Flux
+        return Flux.from(table.scan().items());
     }
 }
 
