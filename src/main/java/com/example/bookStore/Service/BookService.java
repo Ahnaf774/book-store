@@ -1,5 +1,6 @@
 package com.example.bookStore.Service;
 
+import com.example.bookStore.DTO.BookDTO;
 import com.example.bookStore.Model.Book;
 import com.example.bookStore.Repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,16 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public Mono<Book> addBook(Book book) {
-        return bookRepository.save(book);
+    public Mono<Book> addBook(BookDTO bookDTO) {
+        return Mono.just(bookDTO)
+                .map(dto -> Book.builder()
+                        .id(dto.getId())
+                        .title(dto.getTitle())
+                        .author(dto.getAuthor())
+                        .genre(dto.getGenre())
+                        .price(dto.getPrice())
+                        .build())
+                .flatMap(bookRepository::save);
     }
 
     public Mono<Book> getBookById(String id) {
@@ -31,8 +40,16 @@ public class BookService {
         return bookRepository.deleteById(id);
     }
 
-    public Mono<Book> updateBook(Book book) {
-        return bookRepository.update(book);
+    public Mono<Book> updateBook(String id,BookDTO bookDTO) {
+        return Mono.just(bookDTO)
+                .map(dto -> Book.builder()
+                        .id(id)
+                        .title(dto.getTitle())
+                        .author(dto.getAuthor())
+                        .genre(dto.getGenre())
+                        .price(dto.getPrice())
+                        .build())
+                .flatMap(bookRepository::update);
 
     }
         public Flux<Book> getAllBooks() {

@@ -22,18 +22,9 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Book> addBook(@RequestBody BookDTO bookDTO) {
-      return Mono.just(bookDTO)
-              .map(dto -> Book.builder()
-                      .id(dto.getId())
-                      .title(dto.getTitle())
-                      .author(dto.getAuthor())
-                      .genre(dto.getGenre())
-                      .price(dto.getPrice())
-                      .build())
-                        .flatMap(bookService::addBook);
-              };
+        return  bookService.addBook(bookDTO);
 
-
+    }
 
     @GetMapping("/{id}")
     public Mono<Book> getBook(@PathVariable String id) {
@@ -44,15 +35,7 @@ public class BookController {
 
     @PutMapping("/{id}")
         public Mono<Book> updateBook(@PathVariable String id, @RequestBody BookDTO bookDTO) {
-            return Mono.just(bookDTO)
-                    .map(dto -> Book.builder()
-                            .id(id)
-                            .title(dto.getTitle())
-                            .author(dto.getAuthor())
-                            .genre(dto.getGenre())
-                            .price(dto.getPrice())
-                            .build())
-                    .flatMap(bookService::updateBook);
+           return bookService.updateBook(id, bookDTO);
         }
 
 
